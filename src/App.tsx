@@ -1,33 +1,8 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import { Line } from "react-chartjs-2";
-import {
-  ChartOptions,
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale,
-  TimeSeriesScale,
-} from "chart.js";
 import "chartjs-adapter-date-fns";
 import { fetchStockData } from './api/fetchStockData';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale,
-  TimeSeriesScale
-);
+import StockChart from "./StockChart";
 
 interface StockData {
   date: string;
@@ -76,27 +51,6 @@ const App: React.FC = () => {
     ],
   };
 
-  const options: ChartOptions<"line"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        type: "time" as const,
-        time: {
-          displayFormats: {
-            minute: "HH:mm",
-          },
-          tooltipFormat: "HH:mm",
-          parser: "yyyy-MM-dd HH:mm:ss",
-        },
-        ticks: {
-          autoSkip: true,
-          maxTicksLimit: 20,
-        },
-      },
-    },
-  };
-
   if (loading) return <div className="text-center">Loading...</div>;
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
@@ -105,8 +59,8 @@ const App: React.FC = () => {
       <h1 className="text-lg">Nvidia Corp (NVDA)</h1>
       <div className="w-full flex justify-center items-center p-4">
         <h2 className="text-sm mb-4">Intraday Stock Data (Close Price)</h2>
-        <div className="w-full max-w-screen-lg">
-          <Line data={data} options={options} />
+        <div className="w-full h-96">
+          <StockChart data={data} />
         </div>
       </div>
     </section>
