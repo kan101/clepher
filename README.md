@@ -1,4 +1,4 @@
-# Clepher FE Test
+# Clepher
 
 This project uses React, TypeScript and Tailwind. It displays stock information for Nvidia for the day in 5 min intervals. 
 
