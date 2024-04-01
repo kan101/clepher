@@ -1,6 +1,5 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Line } from "react-chartjs-2";
 import {
   ChartOptions,
@@ -15,8 +14,8 @@ import {
   TimeScale,
   TimeSeriesScale,
 } from "chart.js";
-import priceData from "./data.json"; // bypass API restrictions
 import "chartjs-adapter-date-fns";
+import { fetchStockData } from './api/fetchStockData';
 
 ChartJS.register(
   CategoryScale,
@@ -44,36 +43,25 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async () => {
+  useEffect(() => {
     setLoading(true);
-    try {
-      // const { data } = await axios.get(
-      //   `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=NVDA&interval=5min&apikey=GIJ7N54UR89W2FPU`
-      // );
-
-      const timeSeries = priceData["Time Series (5min)"];
-      const parsedData: StockData[] = Object.entries(timeSeries).map(
-        ([date, value]) => ({
+    fetchStockData()
+      .then((data) => {
+        const parsedData = Object.entries(data).map(([date, value]) => ({
           date,
           open: value["1. open"],
           high: value["2. high"],
           low: value["3. low"],
           close: value["4. close"],
           volume: value["5. volume"],
-        })
-      );
-      console.log(parsedData);
-      setStockData(parsedData);
-    } catch (error) {
-      setError("Failed to fetch stock data.");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
+        }));
+        setStockData(parsedData);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch stock data: ", error);
+        setError("Failed to fetch stock data.");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const data = {
