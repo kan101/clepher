@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Line } from "react-chartjs-2";
 import {
-  ChartOptions, 
+  ChartOptions,
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -13,10 +13,10 @@ import {
   Tooltip,
   Legend,
   TimeScale,
-  TimeSeriesScale
+  TimeSeriesScale,
 } from "chart.js";
 import priceData from "./data.json"; // bypass API restrictions
-import 'chartjs-adapter-date-fns';
+import "chartjs-adapter-date-fns";
 
 ChartJS.register(
   CategoryScale,
@@ -48,7 +48,7 @@ const App: React.FC = () => {
     setLoading(true);
     try {
       // const { data } = await axios.get(
-      //   `https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=NVDA&interval=5min&apikey=GIJ7N54UR89W2FPU`
+      //   `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=NVDA&interval=5min&apikey=GIJ7N54UR89W2FPU`
       // );
 
       const timeSeries = priceData["Time Series (5min)"];
@@ -93,18 +93,18 @@ const App: React.FC = () => {
     maintainAspectRatio: false,
     scales: {
       x: {
-        type: 'time' as const,
+        type: "time" as const,
         time: {
           displayFormats: {
-            minute: 'HH:mm'
+            minute: "HH:mm",
           },
-          tooltipFormat: 'HH:mm',
-          parser: 'yyyy-MM-dd HH:mm:ss',
+          tooltipFormat: "HH:mm",
+          parser: "yyyy-MM-dd HH:mm:ss",
         },
         ticks: {
           autoSkip: true,
-          maxTicksLimit: 20
-        }
+          maxTicksLimit: 20,
+        },
       },
     },
   };
@@ -113,15 +113,15 @@ const App: React.FC = () => {
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
   return (
-    <div className="w-full p-4">
-      <h2 className="text-lg font-bold mb-4">
-        Intraday Stock Data (Close Price)
-      </h2>
-      <div className="w-full max-w-screen-lg h-96">
-        <h1></h1>
-        <Line data={data} options={options} />
+    <section>
+      <h1 className="text-lg">Nvidia Corp (NVDA)</h1>
+      <div className="w-full flex justify-center items-center p-4">
+        <h2 className="text-sm mb-4">Intraday Stock Data (Close Price)</h2>
+        <div className="w-full max-w-screen-lg">
+          <Line data={data} options={options} />
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
